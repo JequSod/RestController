@@ -17,22 +17,37 @@
         <th scope="col">Surname</th>
         <th scope="col">Age</th>
         <th scope="col">Phone number</th>
+        <th scope="col">Role</th>
+        <th scope="col">Operations</th>
     </tr>
     </thead>
     <tbody>
+    <tr th:each="user: ${AllUSE}">
 
         <td th:text="${user.username}"/>
         <td th:text="${user.lastName}"/>
         <td th:text="${user.age}"/>
         <td th:text="${user.phoneNumber}"/>
+        <td th:text="${user.rolesToString()}"></td>
+        <td><a th:href="@{/updateUser?id={id}(id=${user.getId()})}" th:text="UPDATE"></a></td>
+        <td><a th:href="@{/deleteUser?id={id}(id=${user.getId()})}" th:text="DELETE"></a></td>
 
     </tr>
     </tbody>
 
 </table>
+
+<br>
+<input type="button" value="Add user"
+       onclick="window.location.href='addUser'"
+/>
+
+<br>
 <br>
 <input type="button" value="Logout"
        onclick="window.location.href='/logout'"
 />
+
+
 </body>
 </html>
