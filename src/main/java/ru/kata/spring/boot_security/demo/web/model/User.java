@@ -4,9 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users2")
@@ -18,7 +17,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
-    private String username;
+    private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
@@ -26,8 +25,8 @@ public class User implements UserDetails {
     @Column(name = "age")
     private byte age;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password")
     private String password;
@@ -37,9 +36,18 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
 
-    private Set<Role> roles = new HashSet<>();
+    private Collection<Role> roles = new ArrayList<>();
 
     public User() {
+    }
+
+    public User(String firstName, String lastName, byte age, String email, String password, Collection<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
     public void setId(Long id) {
@@ -50,13 +58,12 @@ public class User implements UserDetails {
         return id;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String name) {
-        this.username = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
     }
 
     public String getLastName() {
@@ -75,14 +82,6 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -93,16 +92,29 @@ public class User implements UserDetails {
         return password;
     }
 
+    @Override
+    public String getUsername() {
+        return firstName;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 
-    public Set<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String rolesToString() {
@@ -136,10 +148,10 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + username + '\'' +
+                ", name='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
-                ", phoneТumber=" + phoneNumber +
+                "email=" + email +
                 '}';
     }
 }

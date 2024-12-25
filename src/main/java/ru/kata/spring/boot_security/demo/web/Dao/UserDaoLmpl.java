@@ -28,7 +28,7 @@ public class UserDaoLmpl implements UserDao {
     @Override
     public User findByUsername(String username) {
         return entityManager.createQuery(
-                        "SELECT u from User u WHERE u.username = :username", User.class).
+                        "SELECT u from User u WHERE u.email = :username", User.class).
                 setParameter("username", username).getSingleResult();
     }
 

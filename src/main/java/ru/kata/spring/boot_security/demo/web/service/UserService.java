@@ -12,9 +12,9 @@ import ru.kata.spring.boot_security.demo.web.model.Role;
 import ru.kata.spring.boot_security.demo.web.model.User;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -51,8 +51,12 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Set<Role> roles = user.getRoles();
+        Collection<Role> roles = user.getRoles();
         roleDao.saveAll(roles);
         userDao.save(user);
+    }
+
+    public List<Role> findAllRoles() {
+        return roleDao.findAll();
     }
 }

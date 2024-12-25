@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,16 +25,19 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String showAllUser(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user1", user);
         List<User> allUser = userService.getAllUser();
+        model.addAttribute("allRoles", userService.findAllRoles());
         model.addAttribute("AllUSE", allUser);
         return "adminShowOll";
     }
 
     @GetMapping("/addUser")
     public String save(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        return "adminAddDelete";
+        model.addAttribute("userNew", new User());
+        model.addAttribute("allRoles", userService.findAllRoles());
+        return "adminShowOll";
     }
 
     @PostMapping("/saveUser")
@@ -44,12 +48,12 @@ public class AdminController {
 
     @GetMapping("/updateUser")
     public String updateUser(@RequestParam("id") Long id, Model model) {
-        User user = userService.getUser(id);
-        model.addAttribute("user", user);
-        return "adminAddDelete";
+        model.addAttribute("user", userService.getUser(id));
+        model.addAttribute("allRoles", userService.findAllRoles());
+        return "adminShowOll";
     }
 
-    @GetMapping("/deleteUser")
+    @PostMapping("/deleteUser")
     public String removeUser(@RequestParam("id") Long id) {
         userService.removeUser(id);
         return "redirect:/admin";
