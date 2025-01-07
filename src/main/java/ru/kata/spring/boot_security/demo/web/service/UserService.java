@@ -19,14 +19,16 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
+    private final RoleDao roleDao;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private RoleDao roleDao;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserService(UserDao userDao, RoleDao roleDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -34,13 +36,18 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Юзер не найден"));
     }
 
-    public List<User> getAllUser() {
-        return userDao.getAllUser();
+    @Transactional
+    public User showById(Long id) {
+        return userDao.showById(id);
+    }
+
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 
     @Transactional
     public User getUser(Long id) {
-        return userDao.getUser(id);
+        return userDao.showById(id);
     }
 
     @Transactional

@@ -13,7 +13,8 @@ public class UserDaoLmpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public User getUser(Long id) {
+    @Override
+    public User showById(Long id) {
         return entityManager.find(User.class, id);
     }
 
@@ -33,12 +34,12 @@ public class UserDaoLmpl implements UserDao {
     }
 
     @Override
-    public List<User> getAllUser() {
+    public List<User> getAllUsers() {
         return entityManager.createQuery("from User", User.class).getResultList();
     }
 
     public void removeUser(Long id) {
-        entityManager.remove(getUser(id));
+        entityManager.remove(showById(id));
         entityManager.flush();
     }
 }
